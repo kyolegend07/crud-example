@@ -24,6 +24,7 @@
           <th>Product Name</th>
           <th>Introduction Date</th>
           <th>URL</th>
+		  <th>Edit</th>
         </tr>
       </thead>
     </table>
@@ -37,6 +38,7 @@
         Product Information
       </div>
       <div class="panel-body">
+	  <input type="hidden" id="productid" value="0" />
 	  <div class="form-group">
   <label for="productname">Product Name</label>
   <input type="text" id="productname"
@@ -106,6 +108,14 @@ function productBuildTableRow(product) {
      "<td>" + product.ProductName + "</td>" +
      "<td>" + product.IntroductionDate + "</td>"
       + "<td>" + product.Url + "</td>" +
+	  "<td>" +
+  "<button type='button' " +
+     "onclick='productGet(this);' " +
+     "class='btn btn-default' " +
+     "data-id='" + product.ProductID + "'>" +
+     "<span class='glyphicon glyphicon-edit' />"
+   + "</button>" +
+"</td >" +
     "</tr>";
   return ret;
 }
@@ -121,6 +131,35 @@ function handleException(request, message,
   alert(msg);
 }
 productList();
+
+function productGet(ctl) {
+  // Get product id from data- attribute
+  var id = $(ctl).data("id");
+      
+  // Store product id in hidden field
+  $("#productid").val(id);
+      
+  // Call Web API to get a list of Products
+  $.ajax({
+    url: "/Product" + id + ".json",
+    type: 'GET',
+    dataType: 'json',
+    success: function (product) {
+      productToFields(product);
+      
+      // Change Update Button Text
+      $("#updateButton").text("Update");
+    },
+    error: function (request, message, error) {
+      handleException(request, message, error);
+    }
+  });
+}
+function productToFields(product) {
+  $("#productname").val(product.ProductName);
+  $("#introdate").val(product.IntroductionDate);
+  $("#url").val(product.Url);
+}
   </script>
 </body>
 </html>

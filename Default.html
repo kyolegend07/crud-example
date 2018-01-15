@@ -55,8 +55,6 @@
   <input type="url" id="url"
          class="form-control" />
 </div>
-      </div>
-      </div>
       <div class="panel-footer">
 	  <div class="col-xs-12">
     <button type="button" id="updateButton"
@@ -65,6 +63,8 @@
       Add
    </button>
   </div>
+      </div>
+      </div>
       </div>
    </div>
 		
@@ -159,6 +159,35 @@ function productToFields(product) {
   $("#productname").val(product.ProductName);
   $("#introdate").val(product.IntroductionDate);
   $("#url").val(product.Url);
+}
+function updateClick() {
+  // Build product object from inputs
+  Product = new Object();
+  Product.ProductID = 0;
+  Product.ProductName = $("#productname").val();
+  Product.IntroductionDate =
+      $("#introdate").val();
+  Product.Url = $("#url").val();
+  if ($("#updateButton").text().trim() ==
+            "Add") {
+    productAdd(Product);
+  }
+}
+function productAdd(product) { 
+	productAddSuccess(product);
+}
+function productAddSuccess(product) {
+  productAddRow(product);
+  formClear();
+}
+function formClear() {
+  $("#productname").val("");
+  $("#introdate").val("");
+  $("#url").val("");
+  $("#updateButton").text("Add");
+}
+function addClick() {
+  formClear();
 }
   </script>
 </body>

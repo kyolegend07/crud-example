@@ -26,6 +26,7 @@
           <th>Introduction Date</th>
           <th>URL</th>
 		  <th>Edit</th>
+		  <th>Delete</th>
         </tr>
 		<tr ng-show="loading" id="loading">
 		<td colspan="100%"><img src="giphy.gif"></td>
@@ -39,6 +40,9 @@
 			<td><button type='button' ng-click='productGet(x.ProductID);' 
 	 class='btn btn-default'><span 
 	 class='glyphicon glyphicon-edit'/></button> 
+	 <td><button type='button' ng-click='productDelete(x.ProductID);' 
+	 class='btn btn-default'><span 
+	 class='glyphicon glyphicon-remove'/></button>
 	 </td>
 		</tr>
 	  </tbody>
@@ -91,9 +95,6 @@
         app.controller("myCtrl", function ($scope, $http) {
 				$scope.add="Add";
 				$scope.loading = true;
-				$scope.pname = '';
-				$scope.intro = '';
-				$scope.ur = '';
             $http.get("Products.json").then(function (response) {
                 $scope.products = response.data;
 				$scope.loading = false;
@@ -104,6 +105,10 @@
 				$scope.product.IntroductionDate = new Date(response.data.IntroductionDate);	
 				$scope.add="Update";
 			});
+			};
+			$scope.productDelete = function(id){				
+					var index = $scope.products.findIndex(item=>item.ProductID == id);
+					$scope.products.splice(index, 1);
 			};
 			$scope.addClick = function(){ 
 					$scope.product = new Object(),

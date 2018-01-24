@@ -36,8 +36,8 @@
 			<td>{{x.ProductName}}</td>
 			<td>{{x.IntroductionDate}}</td>
 			<td>{{x.Url}}</td>
-			<td><button type='button' onclick='productGet(this);' 
-	 class='btn btn-default' data-id='{{x.ProductID}}'><span 
+			<td><button type='button' ng-click='productGet(x.ProductID);' 
+	 class='btn btn-default'><span 
 	 class='glyphicon glyphicon-edit'/></button> 
 	 </td>
 		</tr>
@@ -45,7 +45,7 @@
     </table>
 	<button type="button" id="addButton"
             class="btn btn-primary"
-            onclick="addClick();">
+            ng-click="addClick();">
       Add Product
     </button>
 	<div class="panel panel-primary">
@@ -53,29 +53,29 @@
         Product Information
       </div>
       <div class="panel-body">
-	  <input type="hidden" id="productid" value="0" />
+	  <input type="hidden" id="productid" value="0" ng-model="product.ProductID" />
 	  <div class="form-group">
   <label for="productname">Product Name</label>
-  <input type="text" id="productname"
-         class="form-control" />
+  <input type="text" id="productname" 
+         class="form-control" ng-model="product.ProductName"/>
 </div>
 <div class="form-group">
   <label for="introdate">Introduction Date
   </label>
-  <input type="date" id="introdate"
-         class="form-control" />
+  <input type="date" id="introdate" 
+         class="form-control" ng-model="product.IntroductionDate"/>
 </div>
 <div class="form-group">
   <label for="url">URL</label>
-  <input type="url" id="url"
-         class="form-control" />
+  <input type="url" id="url" 
+         class="form-control" ng-model="product.Url"/>
 </div>
       <div class="panel-footer">
 	  <div class="col-xs-12">
     <button type="button" id="updateButton"
             class="btn btn-primary"
-            onclick="updateClick();">
-      Add
+            ng-click="updateClick();">
+      {{add}}
    </button>
   </div>
       </div>
@@ -89,11 +89,43 @@
 	<script>
         var app = angular.module("myApp", []);
         app.controller("myCtrl", function ($scope, $http) {
-		$scope.loading = true;
+				$scope.add="Add";
+				$scope.loading = true;
+				$scope.pname = '';
+				$scope.intro = '';
+				$scope.ur = '';
             $http.get("Products.json").then(function (response) {
                 $scope.products = response.data;
-				//$scope.loading = false;
+				$scope.loading = false;
             });
+			$scope.productGet = function(id){ 
+			$http.get("Product" +id +".json").then(function(response){ 
+				$scope.product = response.data;
+				$scope.product.IntroductionDate = new Date(response.data.IntroductionDate);	
+				$scope.add="Update";
+			});
+			};
+			$scope.addClick = function(){ 
+					$scope.product = new Object(),
+					$scope.product.ProductID = 0;
+					$scope.add="Add";
+			};
+			$scope.updateClick=function(){
+				if($scope.product.ProductID == 0) {
+				//$http.post("api", product).then(...);
+				$scope.products.push($scope.product);
+				$scope.addClick();
+				
+				}
+				else { 
+				//$http.put....
+					var index = $scope.products.findIndex(item => item.ProductID == $scope.product.ProductID);
+					$scope.products[index] = $scope.product;
+					$scope.addClick();
+				}				
+			};
+			$scope.product = new Object(),
+			$scope.product.ProductID = 0;
         });
     </script>
 </body>

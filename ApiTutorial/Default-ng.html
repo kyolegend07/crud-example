@@ -37,10 +37,10 @@
 			<td>{{x.ProductName}}</td>
 			<td>{{x.IntroductionDate}}</td>
 			<td>{{x.Url}}</td>
-			<td><button type='button' ng-click='productGet(x.ProductID);' 
+			<td><button type='button' ng-click='productGet(x.ProductId);' 
 	 class='btn btn-default'><span 
 	 class='glyphicon glyphicon-edit'/></button> 
-	 <td><button type='button' ng-click='productDelete(x.ProductID);' 
+	 <td><button type='button' ng-click='productDelete(x.ProductId);' 
 	 class='btn btn-default'><span 
 	 class='glyphicon glyphicon-remove'/></button>
 	 </td>
@@ -57,7 +57,7 @@
         Product Information
       </div>
       <div class="panel-body">
-	  <input type="hidden" id="productid" value="0" ng-model="product.ProductID" />
+	  <input type="hidden" id="productid" value="0" ng-model="product.ProductId" />
 	  <div class="form-group">
   <label for="productname">Product Name</label>
   <input type="text" id="productname" 
@@ -100,23 +100,23 @@
 				$scope.loading = false;
             });
 			$scope.productGet = function(id){ 
-			$http.get("Product" +id +".json").then(function(response){ 
+			$http.get("api/Product/" + id).then(function(response){ 
 				$scope.product = response.data;
 				$scope.product.IntroductionDate = new Date(response.data.IntroductionDate);	
 				$scope.add="Update";
 			});
 			};
 			$scope.productDelete = function(id){				
-					var index = $scope.products.findIndex(item=>item.ProductID == id);
+					var index = $scope.products.findIndex(item=>item.ProductId == id);
 					$scope.products.splice(index, 1);
 			};
 			$scope.addClick = function(){ 
 					$scope.product = new Object(),
-					$scope.product.ProductID = 0;
+					$scope.product.ProductId = 0;
 					$scope.add="Add";
 			};
 			$scope.updateClick=function(){
-				if($scope.product.ProductID == 0) {
+				if($scope.product.ProductId == 0) {
 				//$http.post("api", product).then(...);
 				$scope.products.push($scope.product);
 				$scope.addClick();
@@ -124,7 +124,7 @@
 				}
 				else { 
 				//$http.put....
-					var index = $scope.products.findIndex(item => item.ProductID == $scope.product.ProductID);
+					var index = $scope.products.findIndex(item => item.ProductId == $scope.product.ProductID);
 					$scope.products[index] = $scope.product;
 					$scope.addClick();
 				}				

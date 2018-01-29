@@ -106,27 +106,33 @@
 				$scope.add="Update";
 			});
 			};
-			$scope.productDelete = function(id){				
-					var index = $scope.products.findIndex(item=>item.ProductId == id);
-					$scope.products.splice(index, 1);
+			$scope.productDelete = function (id) {
+			    $http.delete("api/Product/" + $scope.product.ProductId).then(function (response) {
+			        var index = $scope.products.findIndex(item=>item.ProductId == id);
+			        $scope.products.splice(index, 1);
+			    });
+					
 			};
 			$scope.addClick = function(){ 
-					$scope.product = new Object(),
-					$scope.product.ProductId = 0;
+			    $scope.product = new Object(),
+                $scope.product.ProductID = 0;
 					$scope.add="Add";
 			};
 			$scope.updateClick=function(){
-				if($scope.product.ProductId == 0) {
-				//$http.post("api", product).then(...);
-				$scope.products.push($scope.product);
-				$scope.addClick();
-				
+				if($scope.product.ProductID == 0) {
+				    $http.post("api/Product", $scope.product).then(function (response) {
+				        $scope.products.push(response.data);
+				        $scope.addClick();
+				    });				
 				}
 				else { 
-				//$http.put....
-					var index = $scope.products.findIndex(item => item.ProductId == $scope.product.ProductID);
-					$scope.products[index] = $scope.product;
-					$scope.addClick();
+				    //$http.put....
+				    $http.put("api/Product/"+$scope.product.ProductId, $scope.product).then(function (response) {
+				        var index = $scope.products.findIndex(item => item.ProductId == $scope.product.ProductID);
+				        $scope.products[index] = $scope.product;
+				        $scope.addClick();
+				    });
+					
 				}				
 			};
 			$scope.product = new Object(),
